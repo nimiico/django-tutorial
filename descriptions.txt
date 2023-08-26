@@ -1,0 +1,125 @@
+# WSL INSTALATION
+
+- turn windows features on or off -> windows subsystem linux and virtual machine 
+- install ubuntu
+
+
+# SETUPS
+
+## Anaconda Enviroment
+- https://www.digitalocean.com/community/tutorials/how-to-install-the-anaconda-python-distribution-on-ubuntu-20-04
+- conda create --name envname package1 package2 ... # create an enviroment and install packages like python, django, ...
+
+- django-admin # show options of django
+
+
+## Create Project
+
+1. go to directory that you want create project
+2. django-admin startproject <project name> # create django files
+3. code .
+
+- asgi and wsgi -> for deploying the project on server
+
+### Connect to WSL in VS Code
+
+- install wsl extension
+- click on bottom-left of vscode >< to connect
+
+## Django Enviroment
+
+- python manage.py # show subcommands
+- python <filename> # run
+
+- python manage.py runserver # show a localhost address
+
+- name of website is name of domain
+- domain is mounted on IP address (IP: 127.0.0.1:8000)
+- DNS -> domain name system that includes IP and domain name
+
+### Create Modules
+
+- python manage.py startapp <modulename> # create module (app)
+
+- migrations folder # includes database changes
+- models.py # includes entities
+- admin.py # how to configs and display files that exist in model
+
+- we should add modules we added to our project in part 'installed app' of the settings.py file
+
+### URLS and Views
+
+- we write views and functions in views file
+- requests pass to those functions in views and return response 
+- from django.http import HttpResponse # struct of response
+```
+def index(request):
+    return HttpResponse("this is django cousr")
+```
+
+- we write addresses in urls file of each modules.
+- we should make a list and add urls to it.
+
+```
+from django.urls import path	# import path format
+
+from . import views
+
+urlpatterns = [
+    path('sunday', views.index)	# the way of add urls address and connecting to view. path('address', view we want to be connected)
+]
+```
+
+- we should add this urls to main url of our app
+- main urls.py file:
+```
+from django.urls import include	# for passing collection of urls in a each modules
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('challenges/', include('challenges.urls'))	# path('address name', include('appname.urls')) 
+]
+```
+
+- http://127.0.0.1:8000/challenges/sunday # form of above url that we see in browser
+
+- we can get value from url:
+```
+urlpatterns = [
+    path('<str: day>', views.dynamic_days), # <data type : dynamic_value>
+]
+```
+
+- pass value of url to view
+```
+def dynamic_days(request, day): # get day from url and pass it here
+    return HttpResponse(f'day is : {day} and data is : {day_data}')
+```
+
+### Redirect
+- the respone code of redirecting is 300
+- we can get somthing in url (for example number of day) and redirected to another url (day of week):
+```
+def dynamic_days_by_number(request, day):
+    days_name = list(days.keys())
+    redirect_day = days_name[day - 1]
+    return HttpResponseRedirect(f'/days/{redirect_day}') # get address and go to another url address
+```
+
+### Reverse
+
+- views file:
+```
+from django.urls import reverse
+
+def dynamic_days_by_number(request, day):
+    days_name = list(days.keys())
+    redirect_day = days_name[day - 1]
+    redirect_url = reverse('days-of-week', args=[redirect_day]) # reverse(name of path, value that put in days-of-week). # in this way we do not need to write before path (days/...)
+    return HttpResponseRedirect(redirect_url)
+```
+
+urls file:
+```
+path('<str:day>', views.dynamic_days, name='days-of-week'),
+```

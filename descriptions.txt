@@ -1,3 +1,6 @@
+# 00-Basics
+
+
 # WSL INSTALATION
 
 - turn windows features on or off -> windows subsystem linux and virtual machine 
@@ -21,10 +24,12 @@
 
 - asgi and wsgi -> for deploying the project on server
 
+
 ### Connect to WSL in VS Code
 
 - install wsl extension
 - click on bottom-left of vscode >< to connect
+
 
 ## Django Enviroment
 
@@ -106,8 +111,10 @@ def dynamic_days_by_number(request, day):
     return HttpResponseRedirect(f'/days/{redirect_day}') # get address and go to another url address
 ```
 
+
 ### Reverse
 
+- use for dynamic path
 - views file:
 ```
 from django.urls import reverse
@@ -123,3 +130,156 @@ urls file:
 ```
 path('<str:day>', views.dynamic_days, name='days-of-week'),
 ```
+
+
+# 01-Bacics
+
+## Templates
+
+- create templates folder -> create <name of app> folder -> create html file. (conventional)
+
+- read data from html fil and render it:
+```
+from django.template.loader import render_to_string
+
+def dynamic_days(request, day):
+    response_data = render_to_string('challenges/challenge.html') # pass path of html code and get string data of it
+    return HttpResponse(response_data)
+```
+
+- we can use bottom code instead of above code:
+```
+def dynamic_days(request, day):
+    return render(request, 'challenges/challenge.html') # render(request, 'challenges/challenge.html')
+```
+
+
+### DTL (django template language)
+- use dynamic value in html code:
+```
+def dynamic_days(request, day):
+    day_data = days.get(day)
+    context = {	# for DTL we must use dictionary 
+            "data": day_data
+        }
+    return render(request, 'challenges/challenge.html') # render(request, 'challenges/challenge.html', context) # read context from 'challenges/challenge.html'
+```
+
+html form:
+```
+<h2>{{ data }}</h2> # 
+```
+
+
+### Django Templates Filter
+
+- they are built in methods (for example: upper(), captalize(), ...)
+form of using django templates filter:
+```
+<h1>{{ day | title }}</h1> # more features in django docs
+```
+
+
+### Template Tags
+
+- {% %} # template tags form
+
+- we can use template tags in html tags for write logic codes in it
+
+#### For loop tag
+```
+<ul>
+        {% for day in days %} # create list
+        <li>
+            <a href="/days/"> {{ day | title }} </a>
+        </li>
+        {% endfor %}
+    </ul>
+```
+
+#### URL tags for dynamic address
+```
+<a href="{% url 'days-of-week' day %}"> {{ day | title }} </a> # href="{% url 'name of destination address' parameters-that-you-want pass %}"
+```
+
+#### If tags
+```
+{% if data is not None  %}
+    <h2>{{ data }}</h2>
+{% else %}
+    <p>there is no data</p>
+{% endif %}
+```
+
+### Extends in Templates
+
+- we can create base html file for where we have same struct in our html code.
+
+- base file:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block page_title %}روزهای هفته{% endblock  %} # we use block to put dynamic value everywhere we want use this base
+    </title>
+</head>
+<body>
+    <div style="border: 1px solid red">
+        {% block content %}
+            <p>پروژه روزهای هفته</p>
+        {% endblock  %}
+    </div>
+</body>
+</html>
+```
+
+- file that extends:
+```
+# all things in base.html file will be extended and we can add new things to it
+
+{% extends 'base.html' %} # extends from name of the base html file (we can also write relative path but here we use absolute path so we should add path of this file into: settings.py >> TEMPLATES >> DIRS >> BASE_DIR / "path"
+
+{% block page_title %} # change title block
+days info
+{% endblock  %}
+    
+{% block content %} # change content block
+<h1>{{ day | title }}</h1>
+    {% if data is not None  %}
+    <h2>{{ data }}</h2>
+    {% else %}
+    <p>there is no data</p>
+    {% endif %}
+{% endblock  %}
+```
+
+### Includes in Templates
+
+- use for same componemts like footer or header
+- create includes folder in templates/challenges, and create file in include file.
+
+- include header file:
+```
+<header>
+    <nav>
+        <a href="{% url 'days_list' %}">روزهای هفته</a>
+    </nav>
+</header>
+```
+
+- include above code in everywhere we want:
+```
+{% include 'challenges/includes/header.html' %}
+```
+
+## 404 Response
+
+```
+from django.http import Http404
+
+raise Http404() # everywhere we want raise 404 error
+```
+

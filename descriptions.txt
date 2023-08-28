@@ -283,3 +283,27 @@ from django.http import Http404
 raise Http404() # everywhere we want raise 404 error
 ```
 
+
+## Static files
+
+- for using static files like css, js, ... , we should add a folder named 'static' for each app.
+- at first check existing 'django.contrib.staticfiles' in installed apps of settings.py
+- for using stactic files in our html file add load block:
+```
+{% load static %}
+```
+
+- then:
+```
+<link rel="stylesheet" href="{% static "challenges/challenges.css" %}"> # in href add static block and write path of intended file (it must be in static folder)
+```
+
+
+-if you want add static file to global and base of the project, in default, load static, search static folders in apps and do not find it in root. for fix it you should add bottom code at: settings.py >> bottem of the page >> under STATIC_URL:
+```
+STATICFILES_DIRS = [
+     BASE_DIR / "static/" # add new static file base dir
+]
+```
+- the rest of commands is same as before
+

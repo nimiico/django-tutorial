@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header_reference %}
+    <link rel="stylesheet" href="{% static 'blog/index.css' %}">
+{% endblock %}
+
+{% block title %}
+    My Blog
+{% endblock %}
+
+{% block content %}
+
+    <section id="welcome">
+        <header>
+            <img src="{% static 'blog/images/master.jpg' %}" alt="Toplearn - Author Of This Blog">
+            <h2>Toplearn blog project</h2>
+        </header>
+
+        <p>Hi, My name is Mohammad, I'm Teacher in Toplearn</p>
+    </section>
+
+    <section id="latest-posts">
+    <h2>Latest Posts</h2>
+    <ul>
+        {% include 'blog/includes/post.html' %}
+        {% include 'blog/includes/post.html' %}
+        {% include 'blog/includes/post.html' %}
+        {% include 'blog/includes/post.html' %}
+    </ul>
+    </section>
+
+    <section id="about">
+        <h2>What I Do</h2>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci at aut consectetur debitis deserunt dicta dolor dolores ducimus eius enim error ex fugiat hic ipsum iste minima nisi nobis quae qui reiciendis, repellendus rerum sequi tempore unde voluptates voluptatum?
+        </p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam asperiores, aut consectetur corporis cumque deleniti dolore dolorem eaque earum error et facilis hic in ipsum laborum molestiae molestias, nostrum nulla numquam odio omnis provident quaerat quibusdam, quod quos recusandae reprehenderit rerum saepe sapiente soluta totam vero voluptas voluptatum. At enim, fugit hic iste sequi suscipit tempora. Doloremque error est possimus?</p>
+    </section>
+{% endblock %}

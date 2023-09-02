@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header_reference %}
+    <link rel="stylesheet" href="{% static 'blog/index.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/post-detail.css' %}">
+{% endblock %}
+
+{% block title %}
+    title of the post
+{% endblock %}
+
+{% block content %}
+
+    <section id="summary">
+        <h2>post title</h2>
+        <article>
+            <img src="{% static 'blog/images/django.png' %}" alt="post image alt">
+            <address>By Toplearn</address>
+            <div>
+                last updated on <time>July 20th</time>
+            </div>
+        </article>
+    </section>
+
+    <main>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi consectetur, cupiditate ex explicabo id libero perferendis repudiandae totam. Nam, quidem, temporibus? Ad autem blanditiis dolorum fugiat, recusandae sequi suscipit veniam.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi consectetur, cupiditate ex explicabo id libero perferendis repudiandae totam. Nam, quidem, temporibus? Ad autem blanditiis dolorum fugiat, recusandae sequi suscipit veniam.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi consectetur, cupiditate ex explicabo id libero perferendis repudiandae totam. Nam, quidem, temporibus? Ad autem blanditiis dolorum fugiat, recusandae sequi suscipit veniam.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi consectetur, cupiditate ex explicabo id libero perferendis repudiandae totam. Nam, quidem, temporibus? Ad autem blanditiis dolorum fugiat, recusandae sequi suscipit veniam.
+        </p>
+    </main>
+
+{% endblock %}

@@ -1,2 +1,57 @@
 # 03-INTERMEDIATE
 
+## Dynamic Data
+
+- render(request, template name, context)
+- render get context as dictionary form:
+```
+render(request, 'blog/index.html', { # latest-posts is a dictionary
+        'latest_posts': latest_posts
+    },)
+```
+
+- in template name you have access to this context:
+```
+<ul>
+    {% for post in latest_posts %}
+        {% include 'blog/includes/post.html' %}
+    {% endfor %}
+</ul>
+```
+- here in top code we access to each post of latest_posts in post.html:
+```
+<li>
+     <article class="post">
+         <a href="{% url 'post-detail-page' slug=post.slug %}"> # set dynamic slug
+             <img src="{% static 'blog/images/'|add:post.image  %}" alt="{{ post.title }}"> # pipe form -> |add:
+             <div class="post__content">
+                 <h3>{{ post.title }}</h3> # write python code in {{ }}
+                 <p>
+                     {{ post.short_description }} # access to dictionary by '.' in html pages
+                 </p>
+             </div>
+         </a>
+     </article>
+ </li>
+```
+
+- next method form:
+
+```
+post = next(post for post in all_posts if post['slug'] == slug)
+```
+
+- some filters method usages in html files:
+```
+{% block content %}
+    <section id="summary">
+        <img src="{% static 'blog/images/'|add:post.image %}" alt="post image alt">
+        <address>By {{ post.author }}</address>
+        <div>last updated on <time>{{ post.date | date:'d M Y' }}</time></div> # date format method
+    </section>
+    <main>
+        {{ post.content | linebreaks }} # line breaks method: in your content everywhere you have Enter, it puts a new line in view of page..
+    </main>
+{% endblock %}
+```
+

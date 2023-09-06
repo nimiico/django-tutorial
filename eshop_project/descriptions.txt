@@ -1,0 +1,54 @@
+# 04-ADVANCE
+
+## Database
+
+### bascics of Database
+
+- django model fields # you can search it and see how to use and create each feilds
+- in models.py create class that is struct of our table:
+```
+class Product(models.Model): # Product table that inheritance from Model
+    title = models.CharField(max_length=300) 
+    price = models.IntegerField()
+``` 
+
+- ORM is connector between database and your code
+
+- python manage.py makemigrations # make migrations in migrations folder for every model that you add in models file
+- python manage.py migrate# add changes to db.sqlite3 file
+- we must do above commands, whenever we add anything to model or change model
+* see database: Database >> + >> import from path >> choose your db.sqlite3 file >> choose sqlite drive >> apply
+
+
+- some work with database commands on python console:
+```
+from product_module.models import Product # at firist import the model(table)
+new_product = Product(title='samsung galaxy s20', price=23000) # creating new object 
+new_product.save() # save it in table
+
+Product.objects.all() # <QuerySet [<Product: Product object (1)>, <Product: Product object (2)>]>
+Product.objects.all()[0].title # 'samsung galaxy s20'
+
+# we can also edit table in database tables
+
+second_product = Product.objects.all()[1]
+second_product.delete() # deleting the item
+
+Product.objects.create(title='samsung galaxy s4', price=2000) # create item
+
+Product.objects.get(id=4) # get data that its id is 4. (use get when we sure that we have just one item with this property)
+
+Product.objects.filter(rating=5) # get all results that their ratings are 5 (return multiple result in queryset)
+Product.objects.filter(rating__gte=3) # return greater than or equal 3
+Product.objects.filter(rating__lt=3, title__contains='samsung) # return lower than 3and contaion sumsung in its title
+# see this filters in making queries in django docs
+
+# or 2 condition:
+from django.db.models import Q # Q is advance form for write queries
+Product.objects.filter(Q(is_active=True) | Q(rating__gt=3), Q(rating__lt=5)) # (',' is and) ('|' is or)
+
+# increasing performance:
+active_products = Product.objects.filter(is_active=True) # here data has not been taken from database yet, since we use it anywhere so the memory is not occupied
+
+
+```

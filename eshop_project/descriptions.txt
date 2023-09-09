@@ -50,5 +50,97 @@ Product.objects.filter(Q(is_active=True) | Q(rating__gt=3), Q(rating__lt=5)) # (
 # increasing performance:
 active_products = Product.objects.filter(is_active=True) # here data has not been taken from database yet, since we use it anywhere so the memory is not occupied
 
-
 ```
+
+- get datas from database like before in project:
+```
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'product_module/product_list.html', {
+        'products': products,
+    })
+```
+
+- go to page by reverse:
+```
+from django.urls import reverse
+def get_absolute_url(self):
+    return reverse('product-detail', args=[self.id]) # reverse('page you want go(url of method in views)', list of arguments) 
+```
+
+call this function anywhere we want click on it:
+```
+<a href="{{ product.get_absolute_url }}" style="color: black; text-decoration: none"> # call the function
+    {{ product.title }} / price: {{ product.price }}
+</a>
+
+<a href="{% url 'product-detail' product_id=product.id %}" style="color: black; text-decoration: none"> # we can also go to another page by this way
+```
+
+- create slug with overriding save method of models:
+```
+from django.utils.text import slugify
+
+class Product(models.Model):
+    title = models.CharField(max_length=300)
+    slug = models.SlugField(default="", null=False)  # samsung galaxy s20 -> samsung-galaxy-s20
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)  # samsung galaxy s20 -> samsung-galaxy-s20
+        super().save(*args, **kwargs)
+```
+
+- what is db_index? 
+
+### Aggregate:
+
+- has different operations like avg, min, max, ...
+```
+from django.db.models import Avg # also we can import Min, Max, ...
+products = Product.objects.all()
+avg_rating = products.aggregate(Avg('rating')) # aggregate returns a dictionary
+``` 
+
+### Count
+```
+number_or_products = products.count() # counting
+```
+
+### Ordering
+```
+products = Product.objects.all().order_by('-price') # descending sort ( order_by('price') -> ascending sort)
+```
+
+### Django Administration
+
+
+- create admin account for controlling datas:
+```
+python manage.py createsuperuser
+```
+
+- add '/admin/login' to web address to login to admin page
+
+### admin management
+
+- add some features and customize models:
+```
+class ProductAdmin(admin.ModelAdmin): # inherts from admin.ModelAdmin
+    # readonly_fields = ['slug', 'rating'] # convert feature to read only (list)
+    prepopulated_fields = { # prepopulated_field of slug by title (dictionary
+       'slug': ['title']
+    }
+
+    list_display = ['__str__', 'price', 'rating', 'is_active'] # form of display list
+    list_filter = ['rating', 'is_active'] # add filter icon
+    list_editable = ['rating', 'is_active'] # editable ability in list
+
+admin.site.register(models.Product, ProductAdmin) # inherits from ProductAdmin
+
+
+
+
+
+
+
+
